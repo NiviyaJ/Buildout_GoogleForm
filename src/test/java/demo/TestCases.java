@@ -17,6 +17,7 @@ import org.testng.annotations.Test;
 import java.lang.InterruptedException;
 import java.time.Duration;
 import java.util.HashSet;
+import java.util.List;
 import java.util.logging.Level;
 // import io.github.bonigarcia.wdm.WebDriverManager;
  import demo.wrappers.Wrappers;
@@ -58,25 +59,40 @@ public class TestCases {
 
     @Test
     public void testCase01() throws InterruptedException{
-        Boolean status;
         driver.get("https://forms.gle/wjPkzeSEk1CM7KgGA");
-        status = Wrappers.enterName(driver, "Crio Learner");
-        Assert.assertTrue(status);
-        status = Wrappers.enterPracticeAutomationReason(driver, "I want to be the best QA Engineer!");
-        Assert.assertTrue(status);
-        Wrappers.selectAutomationExp(driver, 5);
+        Thread.sleep(5000);
+        //enter name
+        WebElement nameTextBox = driver.findElement(By.xpath("//div[contains(@class, 'k3kHxc')]//input"));
+        Wrappers.enterText(nameTextBox, "Crio Learner");
+        //enter why you practing automation
+        WebElement automationTextArea = driver.findElement(By.className("KHxj8b"));
+        Wrappers.enterText(automationTextArea, "I want to be the best QA Engineer! "+Wrappers.getEpochTIme());
+        //Select automation experience
+        List<WebElement> expRadioBtnList = driver.findElements(By.className("OvPDhc"));
+        Wrappers.selectRadioBtn(driver, expRadioBtnList, 5);
+        Thread.sleep(1000);
+        //Select subjects learned
         HashSet<String> subjects = new HashSet<>();
         subjects.add("Java");
         subjects.add("Selenium");
         subjects.add("TestNG");
-        Wrappers.selectLearnedSubj(driver, subjects);
-        status = Wrappers.selectHowToBeAddressed(driver, "Mrs");
-        Assert.assertTrue(status);
+        List<WebElement> subjChkBoxList = driver.findElements(By.xpath("//span[contains(@class, 'vBHf')]"));
+        Wrappers.selectCheckBox(driver, subjChkBoxList, subjects);
+        //Select how to be addressed
+        Wrappers.selectDropDown(driver, "Mrs");
         System.out.println("How to be addressed selected");
-        Thread.sleep(1000);
-        Wrappers.enterDate(driver);
-        Wrappers.enterTime(driver);
-        Wrappers.clickOnSubmit(driver);
+        //enter date of 7 days ago
+        String date = Wrappers.getFormattedDate("dd/MM/yyyy", 7);
+        WebElement dateInput = driver.findElement(By.xpath("//div[contains(@class,'cIKf')]//input"));
+        Wrappers.enterText(dateInput, date);
+        //enter time 07:30
+        WebElement hourTextBox = driver.findElement(By.xpath("//input[@aria-label='Hour']"));
+        WebElement minTextBox = driver.findElement(By.xpath("//input[@aria-label='Minute']"));
+        Wrappers.enterText(hourTextBox, "07");
+        Wrappers.enterText(minTextBox, "30");
+        //Submit the form
+        WebElement submitBtn = driver.findElement(By.className("Y5sE8d"));
+        Wrappers.clickElement(driver, submitBtn);
         Assert.assertTrue(driver.getCurrentUrl().endsWith("/formResponse"));
         System.out.println("Form submission successful");
         String msg = Wrappers.printSuccessMessage(driver);
