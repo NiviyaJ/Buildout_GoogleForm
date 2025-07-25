@@ -54,7 +54,7 @@ Follow these steps to set up and run the project locally:
 ```bash
 git clone https://github.com/NiviyaJ/Buildout_GoogleForm.git
 
-cd xgoogle-form-test-automation
+cd Buildout_GoogleForm
 ```
 
 ### 2. Make the Gradle Wrapper Executable (Linux/macOS)
